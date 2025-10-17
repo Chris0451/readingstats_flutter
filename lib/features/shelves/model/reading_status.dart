@@ -1,0 +1,1 @@
+enum ReadingStatus { toRead, reading, read }

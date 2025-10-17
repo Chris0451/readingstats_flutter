@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:readingstats_flutter/features/catalog/ui/catalog_screen.dart';
 
 import '../../features/auth/viewmodel/auth_view_model.dart';
 import '../../features/auth/ui/login_screen.dart';
@@ -49,7 +50,7 @@ class _MainShellState extends State<MainShell> {
 
   final _pages = const [
     _CenteredPage('Scaffali'),
-    _CenteredPage('Catalogo'),
+    CatalogScreen(),
     _CenteredPage('Home'),
     _CenteredPage('Profilo'),
   ];
