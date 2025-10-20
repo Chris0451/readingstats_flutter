@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:readingstats_flutter/features/catalog/ui/catalog_screen.dart';
+import 'package:readingstats_flutter/features/shelves/ui/shelves_screen.dart';
+import '../../features/bookdetail/viewmodel/book_detail_view_model.dart';
+import '../../features/bookdetail/ui/book_detail_screen.dart';
 
 import '../../features/auth/viewmodel/auth_view_model.dart';
 import '../../features/auth/ui/login_screen.dart';
 import '../../features/auth/ui/registration_screen.dart';
+
+final GlobalKey<NavigatorState> appNavKey = GlobalKey<NavigatorState>();
 
 // Placeholder comuni
 class _CenteredPage extends StatelessWidget {
@@ -49,7 +55,7 @@ class _MainShellState extends State<MainShell> {
   int _index = 2; // Home di default
 
   final _pages = const [
-    _CenteredPage('Scaffali'),
+    ShelvesScreen(),
     CatalogScreen(),
     _CenteredPage('Home'),
     _CenteredPage('Profilo'),
@@ -86,25 +92,43 @@ class AppNavHost extends StatelessWidget {
       builder: (context, snap) {
         final isAuth = snap.data != null;
 
-        return Navigator(
-          pages: [
-            if (!isAuth)
-              MaterialPage(
-                child: LoginScreen(
-                  onLoginSuccess: () {}, // lo stream porterà a MainShell
-                  onRegisterClick: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => RegistrationScreen(
-                        onRegistered: () => Navigator.of(context).pop(),
-                        onLoginClick: () => Navigator.of(context).pop(),
-                      ),
-                    ));
-                  },
+        return PopScope(
+          // blocchiamo il pop "di default" e lo gestiamo noi
+          canPop: false,
+          onPopInvoked: (didPop) {
+            if (didPop) return; // se qualcun altro ha già poppato, non fare altro
+
+            final nav = appNavKey.currentState;
+            if (nav != null && nav.canPop()) {
+              nav.pop(); // torna alla schermata precedente (es. Dettagli -> Catalogo/Scaffale)
+            } else {
+              // siamo alla root: consenti l'uscita dall’app
+              SystemNavigator.pop();
+            }
+          },
+          child: Navigator(
+            key: appNavKey, // <<--- IMPORTANTE
+            pages: [
+              if (!isAuth)
+                MaterialPage(
+                  child: LoginScreen(
+                    onLoginSuccess: () {},
+                    onRegisterClick: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => RegistrationScreen(
+                            onRegistered: () => Navigator.of(context).pop(),
+                            onLoginClick: () => Navigator.of(context).pop(),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-            if (isAuth) const MaterialPage(child: MainShell()),
-          ],
-          onPopPage: (route, result) => route.didPop(result),
+              if (isAuth) const MaterialPage(child: MainShell()),
+            ],
+            onPopPage: (route, result) => route.didPop(result),
+          ),
         );
       },
     );

@@ -34,6 +34,7 @@ class VolumeInfo {
   final List<String>? categories;
   final ImageLinks? imageLinks;
   final List<IndustryIdentifier>? industryIdentifiers;
+  final String? publishedDate;
 
   VolumeInfo({
     this.title,
@@ -43,6 +44,7 @@ class VolumeInfo {
     this.categories,
     this.imageLinks,
     this.industryIdentifiers,
+    this.publishedDate,
   });
 
   // helper comodi

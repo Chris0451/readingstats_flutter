@@ -6,6 +6,8 @@ import '../viewmodel/catalog_view_model.dart';
 import 'widgets/book_card.dart';
 import 'widgets/category_row.dart';
 import '/core/ui/widgets/app_search_bar.dart';
+import '../../bookdetail/ui/book_detail_screen.dart';
+import '../../bookdetail/viewmodel/book_detail_view_model.dart';
 
 class CatalogScreen extends StatelessWidget {
   final void Function(Book book)? onOpenBook;
@@ -94,9 +96,18 @@ class _CatalogView extends StatelessWidget {
                       final b = s.searchResult[i];
                       return BookCard(
                         book: b,
-                        onTap: (bk) {
-                          final cb = (context.findAncestorWidgetOfExactType<CatalogScreen>() as CatalogScreen?)?.onOpenBook;
-                          if (cb != null) cb(bk);
+                        onTap: (book) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => ChangeNotifierProvider(
+                                create: (_) => BookDetailViewModel(),
+                                child: BookDetailScreen(
+                                  book: book,
+                                  onBack: () => Navigator.of(context).maybePop(),
+                                ),
+                              ),
+                            ),
+                          );
                         },
                       );
                     },
@@ -112,8 +123,17 @@ class _CatalogView extends StatelessWidget {
                       title: row.category,
                       books: row.books,
                       onBookTap: (bk) {
-                        final cb = (context.findAncestorWidgetOfExactType<CatalogScreen>() as CatalogScreen?)?.onOpenBook;
-                        if (cb != null) cb(bk);
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (ctx) => ChangeNotifierProvider(
+                              create: (_) => BookDetailViewModel(),
+                              child: BookDetailScreen(
+                                book: bk,
+                                onBack: () => Navigator.of(ctx).pop(),
+                              ),
+                            ),
+                          ),
+                        );
                       },
                     );
                   },

@@ -2,12 +2,25 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 import '../model/book.dart';
+import '../model/volume.dart';
 import '../model/category_section.dart';
 import '../model/catalog_state.dart';
 
-// Se hai già questo:
 import '../../catalog/data/books_repository.dart';
 import '../../catalog/data/books_api.dart';
+
+Book _mapVolumeToBook(Volume v) => Book(
+  id: v.id,
+  title: v.info.title ?? 'Senza titolo',
+  authors: v.info.authors ?? const [],
+  thumbnail: v.info.imageLinks?.thumbnail,
+  categories: v.info.categories ?? const [],
+  publishedDate: v.info.publishedDate,
+  pageCount: v.info.pageCount,
+  description: v.info.description,
+  isbn13: v.info.isbn13,
+  isbn10: v.info.isbn10,
+);
 
 const kBooksApiKey = String.fromEnvironment('GOOGLE_BOOKS_API_KEY');
 
@@ -21,11 +34,7 @@ class CatalogViewModel extends ChangeNotifier {
       "Romance",
       "Thrillers",
       "Science Fiction",
-      "Adventure",
-      "Business & Economics",
-      "History",
-      "Detective and mystery stories",
-      "Juvenile Fiction"
+      "Adventure"
     ],
   );
   CatalogState get state => _state;
@@ -61,12 +70,7 @@ class CatalogViewModel extends ChangeNotifier {
     notifyListeners();
     try {
       final (items, _) = await _repo.search(query: q, startIndex: 0, pageSize: 30, orderBy: 'relevance');
-      final books = items.map((v) => Book(
-        id: v.id,
-        title: v.info.title ?? 'Senza titolo',
-        thumbnail: v.info.imageLinks?.thumbnail,
-        authors: v.info.authors ?? const [],
-      )).toList();
+      final books = items.map(_mapVolumeToBook).toList();
       _state = _state.copyWith(searchResult: books, searching: false);
     } catch (_) {
       _state = _state.copyWith(searching: false, searchResult: const []);
@@ -110,12 +114,7 @@ class CatalogViewModel extends ChangeNotifier {
     for (final c in categoriesToLoad) {
       try {
         final (items, _) = await _repo.search(query: 'subject:${c.replaceAll(' ', '+')}', startIndex: 0, pageSize: 10);
-        final books = items.map((v) => Book(
-          id: v.id,
-          title: v.info.title ?? 'Senza titolo',
-          thumbnail: v.info.imageLinks?.thumbnail,
-          authors: v.info.authors ?? const [],
-        )).toList();
+        final books = items.map(_mapVolumeToBook).toList();
         sections.add(CategorySection(category: c, books: books));
       } catch (_) {
         sections.add(const CategorySection(category: 'Errore', books: []));

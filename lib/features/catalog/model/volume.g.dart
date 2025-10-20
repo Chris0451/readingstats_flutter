@@ -45,6 +45,7 @@ VolumeInfo _$VolumeInfoFromJson(Map<String, dynamic> json) => VolumeInfo(
   industryIdentifiers: (json['industryIdentifiers'] as List<dynamic>?)
       ?.map((e) => IndustryIdentifier.fromJson(e as Map<String, dynamic>))
       .toList(),
+  publishedDate: json['publishedDate'] as String?,
 );
 
 Map<String, dynamic> _$VolumeInfoToJson(VolumeInfo instance) =>
@@ -56,6 +57,7 @@ Map<String, dynamic> _$VolumeInfoToJson(VolumeInfo instance) =>
       'categories': instance.categories,
       'imageLinks': instance.imageLinks,
       'industryIdentifiers': instance.industryIdentifiers,
+      'publishedDate': instance.publishedDate,
     };
 
 ImageLinks _$ImageLinksFromJson(Map<String, dynamic> json) => ImageLinks(
