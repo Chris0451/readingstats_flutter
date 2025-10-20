@@ -95,6 +95,7 @@ class BookDetailViewModel extends ChangeNotifier {
         'title': userBook.title,
         'authors': userBook.authors,
         'thumbnail': userBook.thumbnail,
+        'description': userBook.description,
         'isbn13': userBook.isbn13,
         'isbn10': userBook.isbn10,
         'status': _code(status),
@@ -160,11 +161,7 @@ class BookDetailViewModel extends ChangeNotifier {
       _status = null;
       _savedReadPages = null;
       if (id != null) {
-          await _ref(id).set({
-          'status': FieldValue.delete(),      // rimuovi il campo dallo stesso doc
-          'pagesRead': FieldValue.delete(),   // opzionale: azzera avanzamento
-          'updatedAt': FieldValue.serverTimestamp(),
-        }, SetOptions(merge: true)); // <<< RIMUOVE DAVVERO DA FIRESTORE
+          await _ref(id).delete();
       }
       // _savedTotalPages lo lasciamo com'è: può servire per futuri settaggi
       if (prev != null) {

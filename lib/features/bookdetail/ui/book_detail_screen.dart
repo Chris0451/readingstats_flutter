@@ -142,6 +142,8 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                       if (b.authors.isNotEmpty) Text(b.authors.join(', '), maxLines: 2, overflow: TextOverflow.ellipsis),
                       if (b.publishedDate != null) Text(b.publishedDate!, style: Theme.of(context).textTheme.bodySmall),
                       if (b.pageCount != null) Text('${b.pageCount} pagine', style: Theme.of(context).textTheme.bodySmall),
+                      if (b.isbn13 != null) Text('isbn13: ${b.isbn13}', style: Theme.of(context).textTheme.bodySmall),
+                      if (b.isbn10 != null) Text('isbn10: ${b.isbn10}', style: Theme.of(context).textTheme.bodySmall),
                       const SizedBox(height: 8),
                       _BookStatusBar(
                         current: vm.status,
@@ -257,7 +259,7 @@ class _ExpandableText extends StatefulWidget {
 }
 
 class _ExpandableTextState extends State<_ExpandableText> {
-  bool expanded = false;
+  bool expanded = true;
   bool overflowing = false;
 
   @override
@@ -277,12 +279,12 @@ class _ExpandableTextState extends State<_ExpandableText> {
         if (!expanded)
           TextButton(
             onPressed: () => setState(() => expanded = true),
-            child: const Text('Mostra tutto'), // ← era "Mostra meno"
+            child: const Text('Mostra meno'),
           )
         else
           TextButton(
             onPressed: () => setState(() => expanded = false),
-            child: const Text('Mostra meno'), // ← era "Mostra tutto"
+            child: const Text('Mostra tutto'),
           ),
       ],
     );

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../viewmodel/shelves_view_model.dart';
+import 'package:provider/provider.dart';
 import '../../shelves/model/reading_status.dart';
-
-/// Cambia questo nome in base alla tua route reale della schermata di dettaglio.
-/// Se nella tua app hai già una costante/route, usala direttamente.
-const String kBookDetailRouteName = '/catalog/book'; // <-- adattalo alla tua app
+import '../../bookdetail/ui/book_detail_screen.dart';
+import '../../bookdetail/viewmodel/book_detail_view_model.dart';
+import '../../catalog/model/book.dart';
 
 class SelectedShelfArgs {
   final ReadingStatus status;
@@ -21,7 +21,6 @@ class SelectedShelfScreen extends StatelessWidget {
     final status = args?.status ?? ReadingStatus.toRead;
 
     final vm = ShelvesViewModel.instance;
-    final books = vm.booksFor(status);
 
     return Scaffold(
       appBar: AppBar(
@@ -62,9 +61,27 @@ class SelectedShelfScreen extends StatelessWidget {
                       )
                     : const Icon(Icons.image_not_supported_outlined),
                 onTap: () {
-                  Navigator.of(context).pushNamed(
-                    kBookDetailRouteName,
-                    arguments: {'bookId': b.id, 'title': b.title},
+                  final book = Book(
+                    id: b.id,
+                    title: b.title,
+                    authors: b.authors,
+                    thumbnail: b.thumbnail,
+                    pageCount: b.pageCount,
+                    description: b.description,
+                    isbn13: b.isbn13,
+                    isbn10: b.isbn10,
+                    publishedDate: b.publishedDate,
+                  );
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (routeCtx) => ChangeNotifierProvider(
+                        create: (_) => BookDetailViewModel(),
+                        child: BookDetailScreen(
+                          book: book,
+                          onBack: () => Navigator.of(routeCtx).maybePop(),
+                        ),
+                      ),
+                    ),
                   );
                 },
               );

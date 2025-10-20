@@ -39,6 +39,10 @@ class UiShelfBook {
   final List<String> authors;
   final String? thumbnail;
   final int? pageCount;
+  final String? description;
+  final String? publishedDate;
+  final String? isbn13;
+  final String? isbn10;
   final int? pagesRead;
   const UiShelfBook({
     required this.id,
@@ -47,6 +51,10 @@ class UiShelfBook {
     this.thumbnail,
     this.pageCount,
     this.pagesRead,
+    this.description,
+    this.publishedDate,
+    this.isbn13,
+    this.isbn10,
   });
 }
 
@@ -89,6 +97,7 @@ class ShelvesViewModel extends ChangeNotifier {
             title: m['title'] as String? ?? '',
             authors: (m['authors'] is List) ? List<String>.from(m['authors'] as List) : const [],
             thumbnail: m['thumbnail'] as String?,
+            description: m['description'] as String?,
             pageCount: (m['pageCount'] as num?)?.toInt(),
             pagesRead: (m['pagesRead'] as num?)?.toInt(),
           ));
