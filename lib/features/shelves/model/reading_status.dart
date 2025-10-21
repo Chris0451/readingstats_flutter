@@ -8,3 +8,20 @@ ReadingStatus? parseReadingStatus(String? raw) {
     return null; // meglio null che un default sbagliato
   }
 }
+
+String label(ReadingStatus s) => switch (s) {
+  ReadingStatus.toRead => 'Da leggere',
+  ReadingStatus.reading => 'In lettura',
+  ReadingStatus.read    => 'Letto',
+};
+String code(ReadingStatus s) => switch (s) {
+  ReadingStatus.toRead => 'TO_READ',
+  ReadingStatus.reading => 'READING',
+  ReadingStatus.read    => 'READ',
+};
+ReadingStatus? fromCode(String? s) => switch (s) {
+  'TO_READ' => ReadingStatus.toRead,
+  'READING' => ReadingStatus.reading,
+  'READ'    => ReadingStatus.read,
+  _         => null,
+};

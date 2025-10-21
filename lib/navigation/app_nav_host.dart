@@ -3,9 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:readingstats_flutter/features/catalog/ui/catalog_screen.dart';
+import 'package:readingstats_flutter/features/home/ui/home_screen.dart';
 import 'package:readingstats_flutter/features/shelves/ui/shelves_screen.dart';
-import '../../features/bookdetail/viewmodel/book_detail_view_model.dart';
-import '../../features/bookdetail/ui/book_detail_screen.dart';
 
 import '../../features/auth/viewmodel/auth_view_model.dart';
 import '../../features/auth/ui/login_screen.dart';
@@ -57,7 +56,7 @@ class _MainShellState extends State<MainShell> {
   final _pages = const [
     ShelvesScreen(),
     CatalogScreen(),
-    _CenteredPage('Home'),
+    HomeScreen(),
     _CenteredPage('Profilo'),
   ];
 

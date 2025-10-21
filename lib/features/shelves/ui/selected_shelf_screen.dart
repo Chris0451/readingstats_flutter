@@ -49,8 +49,8 @@ class SelectedShelfScreen extends StatelessWidget {
               return ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(b.title, maxLines: 1, overflow: TextOverflow.ellipsis),
-                subtitle: (status == ReadingStatus.reading && b.pageCount != null && b.pagesRead != null)
-                    ? Text('${b.pagesRead} / ${b.pageCount} pagine')
+                subtitle: (status == ReadingStatus.reading && b.pageCount != null && b.pageInReading != null)
+                    ? Text('${b.pageInReading} / ${b.pageCount} pagine')
                     : (b.authors.isNotEmpty
                         ? Text(b.authors.join(', '), maxLines: 1, overflow: TextOverflow.ellipsis)
                         : null),

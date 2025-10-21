@@ -43,14 +43,14 @@ class UiShelfBook {
   final String? publishedDate;
   final String? isbn13;
   final String? isbn10;
-  final int? pagesRead;
+  final int? pageInReading;
   const UiShelfBook({
     required this.id,
     required this.title,
     required this.authors,
     this.thumbnail,
     this.pageCount,
-    this.pagesRead,
+    this.pageInReading,
     this.description,
     this.publishedDate,
     this.isbn13,
@@ -99,7 +99,7 @@ class ShelvesViewModel extends ChangeNotifier {
             thumbnail: m['thumbnail'] as String?,
             description: m['description'] as String?,
             pageCount: (m['pageCount'] as num?)?.toInt(),
-            pagesRead: (m['pagesRead'] as num?)?.toInt(),
+            pageInReading: (m['pageInReading'] as num?)?.toInt(),
           ));
         }
         _booksByStatus[ReadingStatus.toRead] = tmp[ReadingStatus.toRead]!;

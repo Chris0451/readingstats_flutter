@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:readingstats_flutter/features/home/data/firestore_home_repository.dart';
+import 'package:readingstats_flutter/features/home/data/home_repository.dart';
+import 'package:readingstats_flutter/features/home/viewmodel/home_view_model.dart';
 import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // <-- per FirebaseFirestore.instance
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:provider/provider.dart';
 import 'features/auth/data/auth_repository.dart';
@@ -10,7 +15,6 @@ import 'navigation/app_nav_host.dart';
 import 'features/catalog/data/books_api.dart';
 
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 const kBooksApiKey = String.fromEnvironment('BOOKS_API_KEY', defaultValue: '');
 const kAndroidCertSha1 = String.fromEnvironment('ANDROID_CERT_SHA1', defaultValue: '');
@@ -33,6 +37,15 @@ void main() async {
             androidPackage: pkg.packageName,
             androidCert: kAndroidCertSha1.replaceAll(':', '').toUpperCase(),
           ),
+        ),
+        Provider<HomeRepository>(
+          create: (_) => FirestoreHomeRepository(
+            FirebaseFirestore.instance,
+            FirebaseAuth.instance,
+          ),
+        ),
+        ChangeNotifierProvider<HomeViewModel>(
+          create: (ctx) => HomeViewModel(ctx.read<HomeRepository>()),
         ),
       ],
       child: const MyApp(),

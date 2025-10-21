@@ -175,7 +175,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                   status: ReadingStatus.toRead,
                                   userBook: payload,
                                   totalPages: pc,
-                                  // pagesRead: null  // opzionale: se vuoi azzerare l’avanzamento
+                                  // pageInReading: null  // opzionale: se vuoi azzerare l’avanzamento
                                 );
                                 break;
                               }
@@ -202,7 +202,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                   status: ReadingStatus.reading,
                                   userBook: payload,
                                   totalPages: pc,
-                                  pagesRead: pr,
+                                  pageInReading: pr,
                                 );
                                 break;
                               }
@@ -220,7 +220,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                   status: ReadingStatus.read,
                                   userBook: payload,
                                   totalPages: pc,
-                                  pagesRead: pc, // completato
+                                  pageInReading: pc, // completato
                                 );
                                 break;
                               }
@@ -411,7 +411,7 @@ class _ReadingFlowDialogsState extends State<_ReadingFlowDialogs> {
                 widget.vm.setStatusWithPages(
                   status: ReadingStatus.reading,
                   userBook: widget.payload,     // ← questo basta
-                  pagesRead: n!,
+                  pageInReading: n!,
                   totalPages: (widget.mode == ReadingFlowMode.start && (totalFromDialog ?? 0) > 0)
                       ? totalFromDialog
                       : null,
@@ -456,7 +456,7 @@ class _ReadingFlowDialogsState extends State<_ReadingFlowDialogs> {
                   status: ReadingStatus.reading,
                   userBook: widget.payload,
                   payload: widget.payload,
-                  pagesRead: n!,
+                  pageInReading: n!,
                   totalPages: (widget.mode == ReadingFlowMode.start && (totalFromDialog ?? 0) > 0)
                       ? totalFromDialog
                       : null,

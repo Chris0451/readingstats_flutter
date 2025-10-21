@@ -49,38 +49,22 @@ class BookDetailViewModel extends ChangeNotifier {
         _savedTotalPages = null;
       } else {
         final d = snap.data()!;
-        _status = _fromCode(d['status'] as String?);
-        _savedReadPages = (d['pagesRead'] as num?)?.toInt();
+        _status = fromCode(d['status'] as String?);
+        _savedReadPages = (d['pageInReading'] as num?)?.toInt();
         _savedTotalPages = (d['pageCount'] as num?)?.toInt();
       }
       notifyListeners();
     });
   }
 
-  String _label(ReadingStatus s) => switch (s) {
-    ReadingStatus.toRead => 'Da leggere',
-    ReadingStatus.reading => 'In lettura',
-    ReadingStatus.read    => 'Letto',
-  };
-
-  String _code(ReadingStatus s) => switch (s) {
-    ReadingStatus.toRead => 'TO_READ',
-    ReadingStatus.reading => 'READING',
-    ReadingStatus.read    => 'READ',
-  };
-  ReadingStatus? _fromCode(String? s) => switch (s) {
-    'TO_READ' => ReadingStatus.toRead,
-    'READING' => ReadingStatus.reading,
-    'READ'    => ReadingStatus.read,
-    _         => null,
-  };
+  
 
   /// Scrittura atomica stato + pagine
   Future<void> setStatusWithPages({
     required ReadingStatus status,
     required UserBook userBook,
     UserBook? payload,
-    int? pagesRead,
+    int? pageInReading,
     int? totalPages,
   }) async {
     if (_isBusy) return;
@@ -98,21 +82,21 @@ class BookDetailViewModel extends ChangeNotifier {
         'description': userBook.description,
         'isbn13': userBook.isbn13,
         'isbn10': userBook.isbn10,
-        'status': _code(status),
+        'status': code(status),
         if (totalPages != null) 'pageCount': totalPages,
-        if (pagesRead  != null) 'pagesRead': pagesRead,
+        if (pageInReading  != null) 'pageInReading': pageInReading,
         'updatedAt': now,
         'createdAt': now,
       };
       await _ref(id).set(data, SetOptions(merge: true));
 
       _status = status;
-      _savedReadPages = pagesRead ?? _savedReadPages;
+      _savedReadPages = pageInReading ?? _savedReadPages;
       _savedTotalPages = totalPages ?? _savedTotalPages ?? userBook.pageCount;
 
       final msg = (prev == null)
-        ? 'Libro aggiunto alla lista ${_label(status)}'
-        : 'Libro spostato da ${_label(prev)} a ${_label(status)}';
+        ? 'Libro aggiunto alla lista ${label(status)}'
+        : 'Libro spostato da ${label(prev)} a ${label(status)}';
       _events.add(msg);
 
       notifyListeners();
@@ -135,15 +119,15 @@ class BookDetailViewModel extends ChangeNotifier {
         _status = null;
         _savedReadPages = null;
         _savedTotalPages = null;
-        _events.add('Libro rimosso dalla lista ${_label(clicked)}');
+        _events.add('Libro rimosso dalla lista ${label(clicked)}');
       } else {
         // Se vuoi lasciare solo toggling, lascia così; 
         // i flussi con dialoghi sono gestiti dalla UI prima di chiamare setStatusWithPages.
         _status = clicked;
         _events.add(
           prev == null
-              ? 'Libro aggiunto alla lista ${_label(clicked)}'
-              : 'Stato cambiato da ${_label(prev)} a ${_label(clicked)}',
+              ? 'Libro aggiunto alla lista ${label(clicked)}'
+              : 'Stato cambiato da ${label(prev)} a ${label(clicked)}',
         );
       }
       notifyListeners();
@@ -165,7 +149,7 @@ class BookDetailViewModel extends ChangeNotifier {
       }
       // _savedTotalPages lo lasciamo com'è: può servire per futuri settaggi
       if (prev != null) {
-        _events.add('Libro rimosso dalla lista ${_label(prev)}');
+        _events.add('Libro rimosso dalla lista ${label(prev)}');
       }
       notifyListeners(); // <<< importante
     } finally {
@@ -220,7 +204,7 @@ class BookDetailViewModel extends ChangeNotifier {
     try {
       final id = _volumeId;
       if (id != null) {
-        await _ref(id).set({'pagesRead': pages, 'updatedAt': FieldValue.serverTimestamp()}, SetOptions(merge: true));
+        await _ref(id).set({'pageInReading': pages, 'updatedAt': FieldValue.serverTimestamp()}, SetOptions(merge: true));
       }
       _savedReadPages = pages;
     } finally {
