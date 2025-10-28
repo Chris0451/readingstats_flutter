@@ -1,7 +1,5 @@
-// lib/features/home/model/ui_home_book.dart
 import 'package:flutter/foundation.dart';
 import 'package:readingstats_flutter/features/shelves/model/user_book.dart';
-import 'package:readingstats_flutter/features/shelves/model/reading_status.dart';
 
 const _uiUnset = Object();
 

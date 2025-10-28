@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:readingstats_flutter/features/home/data/home_repository.dart';
 import 'package:readingstats_flutter/features/home/model/ui_home_book.dart';
-import 'package:readingstats_flutter/features/shelves/model/reading_status.dart';
 import 'package:readingstats_flutter/features/shelves/model/user_book.dart';
 
 class FirestoreHomeRepository implements HomeRepository {
