@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:readingstats_flutter/features/profile/data/friends_manager.dart';
 import '../data/auth_repository.dart';
 import '../model/auth_state.dart';
 
@@ -26,6 +27,7 @@ class AuthViewModel extends ChangeNotifier {
     notifyListeners();
     try {
       await _repo.login(email: _login.email.trim(), password: _login.password.trim());
+      await FriendsManager.syncMyFriendsFromAcceptedRequests();
       _login = _login.copyWith(isSubmitting: false, success: true);
     } on FirebaseAuthException catch (e) {
       _login = _login.copyWith(isSubmitting: false, error: _mapAuthCode(e.code));

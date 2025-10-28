@@ -5,12 +5,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:readingstats_flutter/features/catalog/ui/catalog_screen.dart';
 import 'package:readingstats_flutter/features/home/ui/home_screen.dart';
 import 'package:readingstats_flutter/features/shelves/ui/shelves_screen.dart';
+import 'package:readingstats_flutter/features/profile/ui/profile_screen.dart';
+import 'package:readingstats_flutter/features/profile/viewmodel/profile_view_model.dart';
+import 'package:readingstats_flutter/features/profile/data/profile_repository.dart';
 
 import '../../features/auth/viewmodel/auth_view_model.dart';
 import '../../features/auth/ui/login_screen.dart';
 import '../../features/auth/ui/registration_screen.dart';
 
 final GlobalKey<NavigatorState> appNavKey = GlobalKey<NavigatorState>();
+
 
 // Placeholder comuni
 class _CenteredPage extends StatelessWidget {
@@ -52,13 +56,26 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   int _index = 2; // Home di default
+  
+  late final ProfileViewModel _profileVm;
+  late final List<Widget> _pages;
 
-  final _pages = const [
-    ShelvesScreen(),
-    CatalogScreen(),
-    HomeScreen(),
-    _CenteredPage('Profilo'),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _profileVm = ProfileViewModel(ProfileRepository());
+
+    _pages = [
+      const ShelvesScreen(),
+      const CatalogScreen(),
+      const HomeScreen(),
+      ProfileScreen(
+        vm: _profileVm,
+        onLogout: () => context.read<AuthViewModel>().logout(),
+        onNavigateToFriends: () {},
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
