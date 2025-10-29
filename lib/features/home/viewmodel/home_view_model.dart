@@ -9,8 +9,8 @@ class HomeItemState{
   final UiHomeBook book;
   final bool isRunning;
   final int? sessionStartMillis;
-  final int sessionElapsedSec;   // secondi correnti in questa sessione
-  final int totalReadSec;        // accumulato storico
+  final int sessionElapsedSec;
+  final int totalReadSec;
 
   const HomeItemState({
     required this.book,
@@ -40,7 +40,7 @@ class HomeViewModel extends ChangeNotifier {
 
   HomeViewModel(this.repo) {
     _booksSub = repo.observeReadingBooks().listen((books) {
-      _books = books; //onlyReading;
+      _books = books;
       _rebuild();
     },
     onError: (e, st){
@@ -48,7 +48,7 @@ class HomeViewModel extends ChangeNotifier {
     });
   }
 
-  // ---- stato interno ----
+  // stato interno
   final Map<String, int> _running = <String, int>{};  // bookId -> startMillis
   final Map<String, int> _ticking = <String, int>{};  // bookId -> elapsedSec
   Timer? _ticker;
@@ -59,7 +59,7 @@ class HomeViewModel extends ChangeNotifier {
   HomeUiState _state = const HomeUiState();
   HomeUiState get uiState => _state;
 
-  // ---- API UI ----
+  // API UI
   void onStart(UiHomeBook book) {
     if (_running.containsKey(book.id)) return;
     _running[book.id] = DateTime.now().millisecondsSinceEpoch;
@@ -96,7 +96,6 @@ class HomeViewModel extends ChangeNotifier {
     await repo.updatePagesRead(dlg.book.id, pages);
 
     if (total > 0 && pages >= total) {
-      // promuovi a READ
       final b = dlg.book;
       await repo.setStatus(
         bookId: b.id,
@@ -122,7 +121,7 @@ class HomeViewModel extends ChangeNotifier {
     _rebuild();
   }
 
-  // ---- ticker 1Hz per i timer attivi ----
+  // ticker 1Hz per i timer attivi
   void _startTickerIfNeeded() {
     _ticker ??= Timer.periodic(const Duration(seconds: 1), (_) {
       if (_running.isEmpty) {

@@ -25,7 +25,6 @@ class UserBook extends Book {
     this.pageInReading,
   }) : volumeId = volumeId ?? id;
 
-  /// CopyWith con `_unset` per distinguere “lascia invariato” da “setta null”
   UserBook copyWith({
     String? id,
     String? title,
@@ -93,12 +92,10 @@ class UserBook extends Book {
       'description': description,
       'isbn13': isbn13,
       'isbn10': isbn10,
-      // UserBook
       'volumeId': volumeId,
-      'status': status,          // salva come stringa (es. 'reading')
+      'status': status,
       'pageInReading': pageInReading,
     };
-    // rimuovi i null per salvare pulito su Firestore
     map.removeWhere((_, v) => v == null);
     return map;
   }

@@ -2,13 +2,10 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import '../../shelves/model/reading_status.dart';
 import '../../shelves/model/user_book.dart';
-
-// FIREBASE
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class BookDetailViewModel extends ChangeNotifier {
-  // Stato osservabile (mock + sync con Firestore)
   ReadingStatus? _status;
   int? _savedReadPages;
   int? _savedTotalPages;
@@ -58,8 +55,6 @@ class BookDetailViewModel extends ChangeNotifier {
   }
 
   
-
-  /// Scrittura atomica stato + pagine
   Future<void> setStatusWithPages({
     required ReadingStatus status,
     required UserBook userBook,
@@ -70,7 +65,7 @@ class BookDetailViewModel extends ChangeNotifier {
     if (_isBusy) return;
     _setBusy(true);
     try {
-      final prev = _status; // <<< stato prima del cambio
+      final prev = _status;
       final id = _volumeId ?? userBook.volumeId;
       final now = FieldValue.serverTimestamp();
       final data = <String, dynamic>{
@@ -105,7 +100,6 @@ class BookDetailViewModel extends ChangeNotifier {
     }
   }
 
-  /// Toggle: se riclicchi lo stesso stato, rimuove il libro dalla lista
   Future<void> onStatusIconClick(ReadingStatus clicked, UserBook? payload) async {
     if (_isBusy) return;
     _setBusy(true);
@@ -121,8 +115,6 @@ class BookDetailViewModel extends ChangeNotifier {
         _savedTotalPages = null;
         _events.add('Libro rimosso dalla lista ${label(clicked)}');
       } else {
-        // Se vuoi lasciare solo toggling, lascia così; 
-        // i flussi con dialoghi sono gestiti dalla UI prima di chiamare setStatusWithPages.
         _status = clicked;
         _events.add(
           prev == null
@@ -147,11 +139,10 @@ class BookDetailViewModel extends ChangeNotifier {
       if (id != null) {
           await _ref(id).delete();
       }
-      // _savedTotalPages lo lasciamo com'è: può servire per futuri settaggi
       if (prev != null) {
         _events.add('Libro rimosso dalla lista ${label(prev)}');
       }
-      notifyListeners(); // <<< importante
+      notifyListeners();
     } finally {
       _setBusy(false);
     }
@@ -160,7 +151,7 @@ class BookDetailViewModel extends ChangeNotifier {
   Future<void> toggleShelf({
     required String uid,
     required String bookId,
-    required String shelfValue, // "TO_READ" | "READING" | "READ"
+    required String shelfValue,
     required bool isCurrentlySelected,
   }) async {
     final doc = FirebaseFirestore.instance
@@ -170,13 +161,11 @@ class BookDetailViewModel extends ChangeNotifier {
         .doc(bookId);
 
     if (isCurrentlySelected) {
-      // RIMOZIONE dallo scaffale: elimino il campo 'status'
       await doc.update({
         'status': FieldValue.delete(),
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } else {
-      // AGGIUNTA allo scaffale
       await doc.set({
         'status': shelfValue,
         'updatedAt': FieldValue.serverTimestamp(),

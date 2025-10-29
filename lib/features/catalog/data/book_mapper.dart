@@ -21,8 +21,6 @@ String? _pickThumb(dynamic imageLinks) {
   if (imageLinks == null) return null;
   String? t;
   try {
-    // modello tipizzato
-    // ignore: avoid_dynamic_calls
     t = _asString(imageLinks.thumbnail) ?? _asString(imageLinks.smallThumbnail)
       ?? _asString(imageLinks.medium) ?? _asString(imageLinks.small);
   } catch (_) {
@@ -45,9 +43,7 @@ Map<String, String?> _extractIsbns(dynamic identifiers) {
         id   = _asString(it['identifier'])?.replaceAll('-', '');
       } else {
         try {
-          // ignore: avoid_dynamic_calls
           type = _asString(it.type)?.toUpperCase();
-          // ignore: avoid_dynamic_calls
           id   = _asString(it.identifier)?.replaceAll('-', '');
         } catch (_) {}
       }
@@ -58,7 +54,6 @@ Map<String, String?> _extractIsbns(dynamic identifiers) {
   return <String, String?>{'isbn13': i13, 'isbn10': i10};
 }
 
-/// Mapper tollerante a `null` e sia a model tipizzati che a mappe.
 Book bookFromVolume(Volume v) {
   final vi = v.info;
 
@@ -75,7 +70,7 @@ Book bookFromVolume(Volume v) {
   final ids         = _extractIsbns(vi?.industryIdentifiers);
 
   return Book(
-    id: v.id ?? '', // sempre non-null per il tuo Book
+    id: v.id,
     title: title.isEmpty ? 'Senza titolo' : title,
     authors: authors,
     categories: categories,

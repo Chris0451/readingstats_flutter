@@ -5,7 +5,7 @@ ReadingStatus? parseReadingStatus(String? raw) {
   try {
     return ReadingStatus.values.firstWhere((e) => e.name == raw);
   } catch (_) {
-    return null; // meglio null che un default sbagliato
+    return null;
   }
 }
 

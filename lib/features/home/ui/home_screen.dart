@@ -92,7 +92,6 @@ class _ReadingCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 12),
-            // progress + time
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -116,7 +115,6 @@ class _ReadingCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            // timer button
             SizedBox(
               width: double.infinity,
               height: 52,

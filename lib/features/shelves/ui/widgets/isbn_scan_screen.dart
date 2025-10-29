@@ -11,11 +11,11 @@ class IsbnScanScreen extends StatefulWidget {
 class _IsbnScanScreenState extends State<IsbnScanScreen> {
   final _ctrl = MobileScannerController(
     detectionSpeed: DetectionSpeed.noDuplicates,
-    formats: const [BarcodeFormat.ean13], // 978/979 (fisici)
+    formats: const [BarcodeFormat.ean13],
   );
 
   bool _handled = false;
-  bool _detectedFlash = false; // per colorare di verde la cornice per un attimo
+  bool _detectedFlash = false;
   bool _torchOn = false;
 
   @override
@@ -46,7 +46,6 @@ class _IsbnScanScreenState extends State<IsbnScanScreen> {
           final cutOut = _calcCutOut(constraints.biggest);
           return Stack(
             children: [
-              // 1) Preview fotocamera
               Positioned.fill(
                 child: MobileScanner(
                   controller: _ctrl,
@@ -62,8 +61,6 @@ class _IsbnScanScreenState extends State<IsbnScanScreen> {
                       );
                       return;
                     }
-
-                    // Feedback visivo veloce
                     setState(() => _detectedFlash = true);
                     await Future.delayed(const Duration(milliseconds: 120));
 
@@ -75,14 +72,11 @@ class _IsbnScanScreenState extends State<IsbnScanScreen> {
                   },
                 ),
               ),
-
-              // 2) Overlay con maschera + cornice
               Positioned.fill(
                 child: IgnorePointer(
                   child: CustomPaint(
                     painter: _ScannerOverlayPainter(
                       cutOutRect: cutOut,
-                      // verde se rilevato, altrimenti bianco tenue
                       borderColor: _detectedFlash
                           ? Colors.greenAccent
                           : Colors.white.withOpacity(0.9),
@@ -93,8 +87,6 @@ class _IsbnScanScreenState extends State<IsbnScanScreen> {
                   ),
                 ),
               ),
-
-              // 3) Istruzioni
               Positioned(
                 bottom: 32,
                 left: 24,
@@ -129,8 +121,7 @@ class _IsbnScanScreenState extends State<IsbnScanScreen> {
     );
   }
 
-  /// Riquadro centrale consigliato per codici 1D: largo ~80% della larghezza,
-  /// alto 140px (regolabile).
+  
   Rect _calcCutOut(Size size) {
     final w = size.width * 0.8;
     final h = 140.0;
@@ -147,7 +138,6 @@ class _IsbnScanScreenState extends State<IsbnScanScreen> {
   }
 }
 
-/// Disegna la maschera scura con un “buco” (cutout) e la cornice arrotondata.
 class _ScannerOverlayPainter extends CustomPainter {
   final Rect cutOutRect;
   final Color maskColor;
@@ -184,7 +174,6 @@ class _ScannerOverlayPainter extends CustomPainter {
       borderPaint,
     );
 
-    // (facoltativo) piccole tacche agli angoli
     const t = 18.0;
     final r = Rect.fromLTWH(cutOutRect.left, cutOutRect.top, cutOutRect.width, cutOutRect.height);
     final p = Paint()

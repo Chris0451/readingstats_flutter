@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class AppSearchBar extends StatefulWidget {
-  final String text;                         // stato esterno (es. s.query)
+  final String text;
   final String hintText;
-  final ValueChanged<String> onChanged;      // es. vm.performLiveSearch
-  final ValueChanged<String>? onSubmitted;   // es. (_) => vm.performSearch()
-  final VoidCallback? onClear;               // es. vm.clearSearch()
-  final EdgeInsetsGeometry padding;          // comoda per margini differenti
+  final ValueChanged<String> onChanged;
+  final ValueChanged<String>? onSubmitted;
+  final VoidCallback? onClear;
+  final EdgeInsetsGeometry padding;
   final bool autofocus;
   final TextInputAction textInputAction;
   final TextInputType keyboardType;

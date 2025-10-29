@@ -47,7 +47,6 @@ class VolumeInfo {
     this.publishedDate,
   });
 
-  // helper comodi
   String? get thumbnail => imageLinks?.thumbnail;
   String? get isbn13 => industryIdentifiers
       ?.firstWhere((x) => x.type == 'ISBN_13', orElse: () => const IndustryIdentifier('', ''))

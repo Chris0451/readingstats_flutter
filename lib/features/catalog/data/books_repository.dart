@@ -5,7 +5,6 @@ class BooksRepository {
   final BooksApi api;
   BooksRepository(this.api);
 
-  /// Ritorna (lista volumi, totale risultati)
   Future<(List<Volume> items, int total)> search({
     required String query,
     int startIndex = 0,

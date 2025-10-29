@@ -8,7 +8,7 @@ abstract class HomeRepository {
   /// Aggiorna il totale delle pagine lette
   Future<void> updatePagesRead(String bookId, int pages);
 
-  /// Cambia stato del libro (es. -> read) con eventuale payload completo
+  /// Cambia stato del libro con eventuale payload completo
   Future<void> setStatus({
     required String bookId,
     required String status,

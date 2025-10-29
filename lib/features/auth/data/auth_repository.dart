@@ -29,7 +29,7 @@ class AuthRepository {
     final uLower = username.trim().toLowerCase();
     final unameRef = _db.collection('usernames').doc(uLower);
 
-    // 1) Prenota l'username (no auth necessaria, crea solo createdAt)
+    
     await _db.runTransaction((tx) async {
       final snap = await tx.get(unameRef);
       if (snap.exists) {
@@ -39,14 +39,14 @@ class AuthRepository {
     });
 
     try {
-      // 2) Crea account su Firebase Auth
+      
       final UserCredential cred = await _auth.createUserWithEmailAndPassword(
         email: email.trim(),
         password: password.trim(),
       );
       await cred.user?.updateDisplayName('${name.trim()} ${surname.trim()}');
 
-      // 3) Scrivi profilo utente + collega l'username con il tuo uid
+      
       final uid = cred.user!.uid;
       final userRef = _db.collection('users').doc(uid);
 
@@ -61,16 +61,13 @@ class AuthRepository {
         'createdAt': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
 
-      // ora puoi aggiornare il doc username con il tuo uid (sei autenticato)
       batch.update(unameRef, {'uid': uid});
 
       await batch.commit();
     } on FirebaseAuthException {
-      // rollback soft: la delete potrebbe non essere consentita dalle regole
       await unameRef.delete().catchError((_) {});
       rethrow;
     } on FirebaseException catch (e) {
-      // non provare a cancellare il doc: le regole vietano delete
       throw FirebaseAuthException(code: e.code, message: e.message);
     } catch (_) {
       throw FirebaseAuthException(code: 'unknown', message: 'Registrazione fallita');

@@ -104,7 +104,6 @@ class CatalogViewModel extends ChangeNotifier {
     await _loadCategoryFeeds();
   }
 
-  // ---- Category feeds (usa Google Books subject:) ----
   Future<void> _loadCategoryFeeds() async {
     final categoriesToLoad = _state.selectedCategories.isEmpty
         ? _state.allCategories
@@ -131,7 +130,6 @@ class CatalogViewModel extends ChangeNotifier {
   }
 }
 
-// Helper per creare il VM se non hai provider globali
 CatalogViewModel makeCatalogVm() {
   final repo = BooksRepository(BooksApi(apiKey: kBooksApiKey));
   return CatalogViewModel(repo);

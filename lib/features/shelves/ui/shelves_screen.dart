@@ -199,9 +199,9 @@ Map<String, String?> _extractIsbns(dynamic identifiers) {
       } else {
         // supporto a modelli tipizzati
         try {
-          // ignore: avoid_dynamic_calls
+    
           type = _asString(it.type)?.toUpperCase();
-          // ignore: avoid_dynamic_calls
+    
           id   = _asString(it.identifier)?.replaceAll('-', '');
         } catch (_) {}
       }
@@ -219,23 +219,19 @@ Book _mapVolumeToBook(dynamic vol) {
   // id
   String id = '';
   try {
-    // ignore: avoid_dynamic_calls
     id = _asString(vol.id) ?? '';
   } catch (_) {
     if (vol is Map) id = _asString(vol['id']) ?? '';
   }
 
-  // volumeInfo (può essere obj o Map)
   dynamic info;
   try {
-    // ignore: avoid_dynamic_calls
     info = vol.volumeInfo;
   } catch (_) {
     if (vol is Map) info = vol['volumeInfo'];
   }
 
   if (info == null) {
-    // fallback super-minimale
     return Book(
       id: id,
       title: '',
@@ -250,7 +246,6 @@ Book _mapVolumeToBook(dynamic vol) {
     );
   }
 
-  // campi base
   String? title;
   List<String> authors = const [];
   List<String> categories = const [];
@@ -261,21 +256,13 @@ Book _mapVolumeToBook(dynamic vol) {
   dynamic idsRaw;
 
   try {
-    // ignore: avoid_dynamic_calls
     title         = _asString(info.title);
-    // ignore: avoid_dynamic_calls
     authors       = _asStringList(info.authors);
-    // ignore: avoid_dynamic_calls
     categories    = _asStringList(info.categories);
-    // ignore: avoid_dynamic_calls
     description   = _asString(info.description);
-    // ignore: avoid_dynamic_calls
     publishedDate = _asString(info.publishedDate);
-    // ignore: avoid_dynamic_calls
-    imageLinks    = info.imageLinks;     // obj o Map
-    // ignore: avoid_dynamic_calls
+    imageLinks    = info.imageLinks;
     pageCountRaw  = info.pageCount;
-    // ignore: avoid_dynamic_calls
     idsRaw        = info.industryIdentifiers;
   } catch (_) {
     if (info is Map) {
@@ -293,7 +280,6 @@ Book _mapVolumeToBook(dynamic vol) {
   // thumbnail (obj o Map)
   String? thumb;
   try {
-    // ignore: avoid_dynamic_calls
     thumb = _thumbHttps(_asString(imageLinks?.thumbnail));
   } catch (_) {
     if (imageLinks is Map) {

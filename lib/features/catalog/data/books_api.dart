@@ -23,14 +23,13 @@ class BooksApi {
       )
     );
 
-  /// Ricerca volumi: es. q="android jetpack", "intitle:android", "isbn:9780134685991"
   Future<VolumeList> search({
     required String q,
     int startIndex = 0,
     int maxResults = 20,
-    String? orderBy,      // 'relevance' | 'newest'
-    String? printType,    // 'all' | 'books' | 'magazines'
-    String? langRestrict, // es. 'it'
+    String? orderBy,
+    String? printType,
+    String? langRestrict,
   }) async {
     final params = {
       'q': q,

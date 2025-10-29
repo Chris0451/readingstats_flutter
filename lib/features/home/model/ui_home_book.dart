@@ -8,7 +8,6 @@ class UiHomeBook extends UserBook {
   final int totalReadSeconds;
 
   const UiHomeBook({
-    // --- UserBook / Book (super) ---
     required super.id,
     required super.volumeId,
     required super.title,
@@ -22,11 +21,9 @@ class UiHomeBook extends UserBook {
     super.isbn10,
     super.pageInReading,
     super.status,
-    // --- extra Home ---
     this.totalReadSeconds = 0,
   });
 
-  /// OVERRIDE: stessa firma di UserBook.copyWith
   @override
   UiHomeBook copyWith({
     String? id,
@@ -57,12 +54,10 @@ class UiHomeBook extends UserBook {
       isbn10: isbn10 ?? this.isbn10,
       status: status == _uiUnset ? this.status : status as String?,
       pageInReading: pageInReading == _uiUnset ? this.pageInReading : pageInReading as int?,
-      // NOTA: qui il tempo resta invariato perché la firma del base non lo prevede
       totalReadSeconds: totalReadSeconds,
     );
   }
 
-  /// Helper AGGIUNTIVO per aggiornare anche totalReadSeconds (non è un override)
   UiHomeBook copyWithHome({
     String? id,
     String? title,
@@ -97,7 +92,6 @@ class UiHomeBook extends UserBook {
     );
   }
 
-  /// Comodo se vuoi costruire rapidamente la Home da un UserBook
   factory UiHomeBook.fromUserBook(UserBook b, {int totalReadSeconds = 0}) {
     return UiHomeBook(
       id: b.id,
@@ -137,7 +131,6 @@ class UiHomeBook extends UserBook {
     );
   }
 
-  /// ✅ Serializzazione: eredita i campi di `UserBook` e aggiunge `totalReadSeconds`
   @override
   Map<String, dynamic> toJson() {
     final map = super.toJson();

@@ -30,7 +30,6 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
   String totalOnlyValue = '';
   String? totalOnlyError;
 
-  // Dialog semplice numerico
   Future<int?> _askPositiveInt({
     required String title,
     required String label,
@@ -85,12 +84,9 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
       pageInReading: null,
       status: null,
     );
-    // VM locale (mock/in-memory finché non colleghi il repository)
-    // Puoi anche fornire il VM dall’alto con Provider se preferisci.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<BookDetailViewModel>().bindVolume(widget.book.id);
     });
-    // Snack eventi
     _eventsSub = context.read<BookDetailViewModel>().events.listen((msg) {
       if (!mounted) return;
       ScaffoldMessenger.of(context)
@@ -147,19 +143,17 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                       const SizedBox(height: 8),
                       _BookStatusBar(
                         current: vm.status,
-                        disabled: vm.isBusy || _busy, // ← disattiva subito i bottoni
+                        disabled: vm.isBusy || _busy,
                         onSet: (newStatus) async {
                           final payload = baseUserBook.copyWith(pageCount: totalPages);
 
                           setState(() => _busy = true);
                           try {
-                            // Toggle OFF: riclic su stessa icona -> rimuovi 'status'
                             if (vm.status == newStatus) {
                               await vm.clearStatus();
                               return;
                             }
-
-                            // Toggle ON / cambio scaffale
+                            
                             switch (newStatus) {
                               case ReadingStatus.toRead: {
                                 int? pc = totalPages;
@@ -175,7 +169,6 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                   status: ReadingStatus.toRead,
                                   userBook: payload,
                                   totalPages: pc,
-                                  // pageInReading: null  // opzionale: se vuoi azzerare l’avanzamento
                                 );
                                 break;
                               }
@@ -220,7 +213,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                   status: ReadingStatus.read,
                                   userBook: payload,
                                   totalPages: pc,
-                                  pageInReading: pc, // completato
+                                  pageInReading: pc,
                                 );
                                 break;
                               }
@@ -294,12 +287,12 @@ class _ExpandableTextState extends State<_ExpandableText> {
 class _BookStatusBar extends StatelessWidget {
   final ReadingStatus? current;
   final ValueChanged<ReadingStatus> onSet;
-  final bool disabled; // NEW
+  final bool disabled;
 
   const _BookStatusBar({
     required this.current,
     required this.onSet,
-    this.disabled = false, // NEW
+    this.disabled = false,
   });
 
   @override
@@ -312,21 +305,21 @@ class _BookStatusBar extends StatelessWidget {
       children: [
         IconButton(
           tooltip: 'Da leggere',
-          onPressed: disabled ? null : () => onSet(ReadingStatus.toRead), // NEW
+          onPressed: disabled ? null : () => onSet(ReadingStatus.toRead),
           icon: Icon(Icons.menu_book_outlined,
             color: tint(current == ReadingStatus.toRead)
           ),
         ),
         IconButton(
           tooltip: 'In lettura',
-          onPressed: disabled ? null : () => onSet(ReadingStatus.reading), // NEW
+          onPressed: disabled ? null : () => onSet(ReadingStatus.reading),
           icon: Icon(Icons.auto_stories_outlined,
             color: tint(current == ReadingStatus.reading)
           ),
         ),
         IconButton(
           tooltip: 'Letto',
-          onPressed: disabled ? null : () => onSet(ReadingStatus.read), // NEW
+          onPressed: disabled ? null : () => onSet(ReadingStatus.read),
           icon: Icon(Icons.check_circle_outline,
               color: tint(current == ReadingStatus.read)
             ),
@@ -401,7 +394,7 @@ class _ReadingFlowDialogsState extends State<_ReadingFlowDialogs> {
             },
             onDismiss: () {
               setState(() => showTotalDialog = false);
-              widget.onClose(); // abbandona il flusso
+              widget.onClose();
             },
             onConfirm: () {
               final n = int.tryParse(readPages);
@@ -410,7 +403,7 @@ class _ReadingFlowDialogsState extends State<_ReadingFlowDialogs> {
                 final totalFromDialog = int.tryParse(totalPages);
                 widget.vm.setStatusWithPages(
                   status: ReadingStatus.reading,
-                  userBook: widget.payload,     // ← questo basta
+                  userBook: widget.payload,
                   pageInReading: n!,
                   totalPages: (widget.mode == ReadingFlowMode.start && (totalFromDialog ?? 0) > 0)
                       ? totalFromDialog
@@ -482,7 +475,6 @@ class _BookCover extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // normalizza: preferisci sempre https (Android blocca http cleartext)
     final safeUrl = (url == null || url!.isEmpty)
         ? null
         : url!.startsWith('http://')
@@ -499,12 +491,10 @@ class _BookCover extends StatelessWidget {
     return Image.network(
       safeUrl,
       fit: BoxFit.cover,
-      // mostra un loader mentre scarica
       loadingBuilder: (context, child, progress) {
         if (progress == null) return child;
         return const Center(child: CircularProgressIndicator(strokeWidth: 2));
       },
-      // non far crashare il build se l'URL è invalido o fallisce il download
       errorBuilder: (_, __, ___) => placeholder(),
     );
   }

@@ -32,7 +32,7 @@ class SelectedShelfScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: AnimatedBuilder(
-        animation: vm, // ← riassembla quando il VM chiama notifyListeners()
+        animation: vm,
         builder: (context, _) {
           final books = vm.booksFor(status);
 
