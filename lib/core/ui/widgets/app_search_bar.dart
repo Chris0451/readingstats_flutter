@@ -43,7 +43,6 @@ class _AppSearchBarState extends State<AppSearchBar> {
   @override
   void didUpdateWidget(covariant AppSearchBar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Se il testo esterno cambia (es. vm.clearSearch), sincronizza il controller.
     if (widget.text != _controller.text) {
       final pos = TextSelection.collapsed(offset: widget.text.length);
       _controller.value = TextEditingValue(text: widget.text, selection: pos);
@@ -78,7 +77,6 @@ class _AppSearchBarState extends State<AppSearchBar> {
                 tooltip: 'Pulisci',
                 icon: const Icon(Icons.clear),
                 onPressed: () {
-                  // Aggiorna UI + notifica i callback esterni
                   _controller.clear();
                   widget.onChanged('');
                   widget.onClear?.call();
